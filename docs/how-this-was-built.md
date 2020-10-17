@@ -16,18 +16,21 @@ cd system-of-record
 git init
 ```
 
+## Initialize CDK app
+
+This will create a CDK app with files named after the directory.
+Note: This needs to be done in an empty directory.
+
+```
+cdk init app --language=typescript
+```
+
 ## Create Docs
 
 README.md
 docs/how-this-was-created.md (this doc)
 
-## Initialize CDK app
 
-This will create a CDK app with files named after the directory.
-
-```
-cdk init app --language=typescript
-```
 
 ## Save our work
 
