@@ -18,6 +18,12 @@ npm install -g aws-cdk
 git clone 
 ```
 
+## Install the modules
+
+```
+npm install
+```
+
 ### Build the project
 
 ```
