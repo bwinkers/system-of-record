@@ -136,7 +136,6 @@ cdk diff
 
 ## Add the API in the main stack file
 
-
 ### Include the API Gateway module
 
 ```javascript
@@ -145,18 +144,31 @@ import * as apigateway from '@aws-cdk/aws-apigateway';
 
 ### Define an API Gateway
 
-We will create an API and refer to it as `api` in the rest of this script. I used the follwing information in defining the API.
-
-- Constructs Logical ID: "sor-api"
-- API Name: "System of Record Service"
-- Description: "This service records events in a secure ledger."
-
 ```javascript
-const api = new apigateway.RestApi(this, "sor-api", {
-    restApiName: "System of Record Service",
-    description: "This service records events in a secure ledger."
+new apigateway.LambdaRestApi(this, 'Endpoint', {
+    handler: sorLambda
 });
 ```
+
+# Test Deploy
+
+I like to test end-to-end as early as possible.
+
+## Bootstrap CDK
+
+```bash
+cdk bootstrap
+```
+
+## Deploy the CDK app
+
+```bash
+cdk deploy
+```
+
+## Tests 
+
+- Can you access the API andpoint
 
 ### Define the API root for the Gateway
 
