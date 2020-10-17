@@ -39,15 +39,23 @@ git remote add origin git@github.com:bwinkers/system-of-record.git
 git push -u origin master
 ```
 
-## The main stack file
+## The entry point
 
-There primary stack file is in the `/bin` directory of the generated project. It will be named after the CDK project. If you've built the code or are running `npm run watch` then the compiled `.js` will also appear.
+There primary entry point is in the `/bin` directory of the generated project. It will be named after the CDK project. If you've built the code or are running `npm run watch` then the compiled `.js` will also appear. 
 
+]]"{P;jhb cv\
 ```bash
 bin
-├── system-of-record.d.ts (created as part of compiling the generated file)
-├── system-of-record.js (the generated file that needs to be deployed)
-└── system-of-record.ts (the file you edit)
+└── system-of-record.ts
+```
+
+## The main stack file
+
+All major changes happen through this file. This is the file you will edit to add new functionality.
+
+```bash
+lib
+└── system-of-record-stack.ts
 ```
 
 ## Generate the initial blank template
@@ -65,7 +73,53 @@ npm install --save \
 @aws-cdk/aws-qldb
 ```
 
-## Define the API in the main stack file
+## Add the API in the main stack file
+
+Each piece of the stack gets a few lines of code added in the main stack file.
+AWS CDK then automagically turns that small amount of code into large complex Cloudformation files. Best practices and least privileges are implemented with no additional effort.
+
+### Include the API Gateway module
+
+```javascript
+import * as apigateway from '@aws-cdk/aws-apigateway';
+````
+
+### Define an API Gateway
+
+We will create an API and refer to it as `api` in the rest of this script. I used the follwing information in defining the API.
+
+- Constructs Logical ID: "sor-api"
+- API Name: "System of Record Service"
+- Description: "This service records events in a secure ledger."
+
+```javascript
+const api = new apigateway.RestApi(this, "sor-api", {
+    restApiName: "System of Record Service",
+    description: "This service records events in a secure ledger."
+});
+```
+
+### Define the API root for the Gateway
+
+I will attach resources to the root and methods to the resources following good REST practices. CDK does a lot of the heavy lifting to create a consistent framework.
+
+```javascript
+api.root.addMethod('ANY');
+```
+
+#### Add a RESTful resource to the API
+
+I want REST services provided under the resource name `records`. I also use `records` as the local variable name in this script to make human comprehension easier.
+
+```javascript
+var records = api.root.addResource("records");
+```
+
+#### Add a POST support to our resource
+
+```javascript
+api.root.addMethod("POST", createRecordIntegration);
+```
 
 ## View the stack difference with API
 
