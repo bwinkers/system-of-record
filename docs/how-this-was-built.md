@@ -1,3 +1,4 @@
+
 # History of how this was made
 
 ## Create directory to use
@@ -41,9 +42,8 @@ git push -u origin master
 
 ## The entry point
 
-There primary entry point is in the `/bin` directory of the generated project. It will be named after the CDK project. If you've built the code or are running `npm run watch` then the compiled `.js` will also appear. 
+There primary entry point is in the `/bin` directory of the generated project. It will be named after the CDK project. If you've built the code or are running `npm run watch` then the compiled `.js` will also appear.
 
-]]"{P;jhb cv\
 ```bash
 bin
 └── system-of-record.ts
@@ -73,10 +73,69 @@ npm install --save \
 @aws-cdk/aws-qldb
 ```
 
+## Create a Lambda
+
+Create a new `lambda` directory at the same level as `lib` and `bin`.
+
+```bash
+mkdir lambda
+```
+
+Create the Lamba file.
+
+```bash
+vi lambda/SystermOfRecordService.ts
+```
+
+Add this content to the Lambda file:
+
+```javascript
+exports.handler = async function(event) {
+console.log("request:", JSON.stringify(event, undefined, 2));
+    return {
+        statusCode: 200,
+        headers: { "Content-Type": "text/plain" },
+        body: "System of Record Service (SoRS)\n"
+    };
+};
+```
+
+### Log from Lambda
+
+@TODO
+
+### Trace Lambda
+
+@TODO
+
+## Reference Lambda in main stack file
+
+We need to include the requried modules and define the Lambda in the stack
+
+### Include Lambda module
+
+```javascript
+import * as lambda from '@aws-cdk/aws-lambda';
+```
+
+### Define the Lambda construct
+
+```javascript
+const sorLambda = new lambda.Function(this, 'sorHandler', {
+    runtime: lambda.Runtime.NODEJS_12_X,     // execution environment
+    code: lambda.Code.fromAsset('lambda'),   // code loaded from "lambda" directory
+    handler: 'SystemOfRecordService.handler' // file is "hello", function is "handler"
+});
+```
+
+## View the stack difference with Lambda
+
+```bash
+cdk diff
+```
+
 ## Add the API in the main stack file
 
-Each piece of the stack gets a few lines of code added in the main stack file.
-AWS CDK then automagically turns that small amount of code into large complex Cloudformation files. Best practices and least privileges are implemented with no additional effort.
 
 ### Include the API Gateway module
 
@@ -138,24 +197,6 @@ npm install --save-dev  newman
 newman <API_URL> system-of-record-ping.json
 ```
 
-## Create a Lambda 
-
-### Log from Lambda
-
-### Trace Lambda
-
-## Reference Lambda in main stack file
-
-## Connect API and Lambda
-
-### Route API Gateway calls to Lambda
-
-### Grant API Gateway permissions to call Lambda
-
-## View the stack difference with Lambda
-
-## Deploy the stack with Lambda
-
 ## Define the QLDB
 
 ## Update QLDB from Lambda
@@ -177,5 +218,3 @@ newman <API_URL> system-of-record-ping.json
 ### Add QLDB to dashboard
 
 ### Create traffic queries
-
-
