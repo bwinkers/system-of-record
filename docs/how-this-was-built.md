@@ -45,5 +45,10 @@ git push -u origin master
 
 There primary stack file is in the `/bin` directory of the generated project. It will be named after the CDK project
 
-
+```
+bin
+├── system-of-record.d.ts (created as part of compiling the generated file)
+├── system-of-record.js (the generated file that needs to be deployed)
+└── system-of-record.ts (the file you edit)
+```
 
