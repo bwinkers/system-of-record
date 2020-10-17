@@ -71,11 +71,18 @@ npm install --save \
 
 ## Deploy the stack with API
 
-### Test the  API response
-
 ### Log the API responses
 
 ### Alert on the API responses
+
+## Test API Response
+
+We have a simple Postman collection that performs a correct POST given the URL of your API Gateway.
+
+```bash
+npm install --save-dev  newman
+newman <API_URL> system-of-record-ping.json
+```
 
 ## Create a Lambda 
 
@@ -87,6 +94,10 @@ npm install --save \
 
 ## Connect API and Lambda
 
+### Route API Gateway calls to Lambda
+
+### Grant API Gateway permissions to call Lambda
+
 ## View the stack difference with Lambda
 
 ## Deploy the stack with Lambda
@@ -95,10 +106,22 @@ npm install --save \
 
 ## Update QLDB from Lambda
 
-## View the stack difference with QLDB
+### Modify Lambda code to update QLDB
 
-## Deploy the stack with QLDB referenced
+### Grant Lambda permissions to read and write QLDB
 
+## View the stack difference with QLDB integrated
 
+## Deploy the stack with QLDB integrated
+
+## Monitor App
+
+### Add API Gateway to dashboard
+
+### Add Lambda to dashboard
+
+### Add QLDB to dashboard
+
+### Create traffic queries
 
 
