@@ -64,3 +64,41 @@ npm install --save \
 @aws-cdk/aws-lambda \
 @aws-cdk/aws-qldb
 ```
+
+## Define the API in the main stack file
+
+## View the stack difference with API
+
+## Deploy the stack with API
+
+### Test the  API response
+
+### Log the API responses
+
+### Alert on the API responses
+
+## Create a Lambda 
+
+### Log from Lambda
+
+### Trace Lambda
+
+## Reference Lambda in main stack file
+
+## Connect API and Lambda
+
+## View the stack difference with Lambda
+
+## Deploy the stack with Lambda
+
+## Define the QLDB
+
+## Update QLDB from Lambda
+
+## View the stack difference with QLDB
+
+## Deploy the stack with QLDB referenced
+
+
+
+
