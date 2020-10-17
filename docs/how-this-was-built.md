@@ -52,3 +52,9 @@ bin
 └── system-of-record.ts (the file you edit)
 ```
 
+## Generate the initial blank template
+
+```
+cdk synth > template.yaml
+```
+
