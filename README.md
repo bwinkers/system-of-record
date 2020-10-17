@@ -29,7 +29,7 @@ npm install
 ### Build the project
 
 ```
-npm build
+npm run build
 ```
 
 ### Deploy the project
