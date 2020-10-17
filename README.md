@@ -2,7 +2,9 @@
 
 This is an AWS CDK project that builds a System-o-Record API using AWS API Gateway, Lambda and QLDB.
 
-## AWS CDK
+## Quick Install
+
+### Install AWS CDK
 
 First you need to install the CDK. Using the CDK to define our stack requires less typing and is less error prone.
 
@@ -10,21 +12,23 @@ First you need to install the CDK. Using the CDK to define our stack requires le
 npm install -g aws-cdk
 ```
 
-## Clone the project
+### Clone the project
 
 ```
 git clone 
 ```
 
-## Build the project
+### Build the project
 
 ```
 npm build
 ```
 
-## Deploy the project
+### Deploy the project
 
 ```
 cdk deploy
 ```
+
+
 
