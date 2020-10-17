@@ -1,6 +1,6 @@
-# System-of-Record
+# System of Record Service (SoRS)
 
-This is an AWS CDK project that builds a System-o-Record API using AWS API Gateway, Lambda and QLDB.
+This is an AWS CDK project that builds a System of Record API using AWS API Gateway, Lambda and QLDB.
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
