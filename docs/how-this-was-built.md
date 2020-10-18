@@ -168,7 +168,19 @@ cdk deploy
 
 ## Tests 
 
-- Can you access the API andpoint
+- Can I access the API endpoint?
+- Can I test the Lambda directly?
+- Can I see logs of my activity?
+
+## Add QLDB Support
+
+### Require modules
+
+### Define QLDB
+
+### Grant Lambda permissions to QLDB
+
+
 
 ### Define the API root for the Gateway
 
