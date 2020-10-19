@@ -7,15 +7,15 @@ export class SystemOfRecordStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
 
-    const sorslambda = new lambda.Function(this, 'sorHandler', {
+    const sorsLambda = new lambda.Function(this, 'Handler', {
       runtime: lambda.Runtime.NODEJS_12_X,     // execution environment
       code: lambda.Code.fromAsset('lambda'),   // code loaded from "lambda" directory
-      handler: 'SystemOfRecordService.handler' // file is "hello", function is "handler"
+      handler: 'SystemOfRecordService.handler' // file is "SystemOfRecordService", function is "handler"
     })
 
-    // defines an API Gateway REST API resource backed by our "sorslambda" function.
+    // defines an API Gateway REST API resource backed by our "sorsLambda" function.
     new apigateway.LambdaRestApi(this, 'Endpoint', {
-      handler: sorslambda
+      handler: sorsLambda
     })
   }
 }

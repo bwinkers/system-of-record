@@ -1,11 +1,303 @@
 Resources:
+  HandlerServiceRoleFCDC14AE:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Handler/ServiceRole/Resource
+  Handler886CB40B:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Ref: AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdS3BucketE8964A6D
+        S3Key:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdS3VersionKey4F2D6DAB
+              - Fn::Select:
+                  - 1
+                  - Fn::Split:
+                      - "||"
+                      - Ref: AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdS3VersionKey4F2D6DAB
+      Handler: SystemOfRecordService.handler
+      Role:
+        Fn::GetAtt:
+          - HandlerServiceRoleFCDC14AE
+          - Arn
+      Runtime: nodejs12.x
+    DependsOn:
+      - HandlerServiceRoleFCDC14AE
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Handler/Resource
+      aws:asset:path: /home/brian/sandbox/system-of-record/lambda
+      aws:asset:property: Code
+  EndpointEEF1FD8F:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: Endpoint
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Resource
+  EndpointCloudWatchRoleC3C64E0F:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/CloudWatchRole/Resource
+  EndpointAccountB8304247:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn:
+        Fn::GetAtt:
+          - EndpointCloudWatchRoleC3C64E0F
+          - Arn
+    DependsOn:
+      - EndpointEEF1FD8F
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Account
+  EndpointDeployment318525DAd5e8f98f1577ee0d21d4f7bb14904743:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId:
+        Ref: EndpointEEF1FD8F
+      Description: Automatically created by the RestApi construct
+    DependsOn:
+      - EndpointproxyANYC09721C5
+      - Endpointproxy39E2174E
+      - EndpointANY485C938B
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Deployment/Resource
+  EndpointDeploymentStageprodB78BEEA0:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId:
+        Ref: EndpointEEF1FD8F
+      DeploymentId:
+        Ref: EndpointDeployment318525DAd5e8f98f1577ee0d21d4f7bb14904743
+      StageName: prod
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/DeploymentStage.prod/Resource
+  Endpointproxy39E2174E:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId:
+        Fn::GetAtt:
+          - EndpointEEF1FD8F
+          - RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId:
+        Ref: EndpointEEF1FD8F
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/{proxy+}/Resource
+  EndpointproxyANYApiPermissionSystemOfRecordStackEndpoint8E90F202ANYproxyDC265917:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - Handler886CB40B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /
+            - Ref: EndpointDeploymentStageprodB78BEEA0
+            - /*/*
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.SystemOfRecordStackEndpoint8E90F202.ANY..{proxy+}
+  EndpointproxyANYApiPermissionTestSystemOfRecordStackEndpoint8E90F202ANYproxyB8055532:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - Handler886CB40B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /test-invoke-stage/*/*
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/{proxy+}/ANY/ApiPermission.Test.SystemOfRecordStackEndpoint8E90F202.ANY..{proxy+}
+  EndpointproxyANYC09721C5:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Ref: Endpointproxy39E2174E
+      RestApiId:
+        Ref: EndpointEEF1FD8F
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - Handler886CB40B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/{proxy+}/ANY/Resource
+  EndpointANYApiPermissionSystemOfRecordStackEndpoint8E90F202ANY7C386B19:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - Handler886CB40B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /
+            - Ref: EndpointDeploymentStageprodB78BEEA0
+            - /*/
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/ANY/ApiPermission.SystemOfRecordStackEndpoint8E90F202.ANY..
+  EndpointANYApiPermissionTestSystemOfRecordStackEndpoint8E90F202ANYE4D6D171:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - Handler886CB40B
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:"
+            - Ref: AWS::Region
+            - ":"
+            - Ref: AWS::AccountId
+            - ":"
+            - Ref: EndpointEEF1FD8F
+            - /test-invoke-stage/*/
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/ANY/ApiPermission.Test.SystemOfRecordStackEndpoint8E90F202.ANY..
+  EndpointANY485C938B:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      HttpMethod: ANY
+      ResourceId:
+        Fn::GetAtt:
+          - EndpointEEF1FD8F
+          - RootResourceId
+      RestApiId:
+        Ref: EndpointEEF1FD8F
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - ":apigateway:"
+              - Ref: AWS::Region
+              - :lambda:path/2015-03-31/functions/
+              - Fn::GetAtt:
+                  - Handler886CB40B
+                  - Arn
+              - /invocations
+    Metadata:
+      aws:cdk:path: SystemOfRecordStack/Endpoint/Default/ANY/Resource
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.68.0,@aws-cdk/cloud-assembly-schema=1.68.0,@aws-cdk/core=1.68.0,@aws-cdk/cx-api=1.68.0,@aws-cdk/region-info=1.68.0,jsii-runtime=node.js/v12.15.0
+      Modules: aws-cdk=1.68.0,@aws-cdk/assets=1.68.0,@aws-cdk/aws-apigateway=1.68.0,@aws-cdk/aws-applicationautoscaling=1.68.0,@aws-cdk/aws-autoscaling-common=1.68.0,@aws-cdk/aws-cloudwatch=1.68.0,@aws-cdk/aws-codeguruprofiler=1.68.0,@aws-cdk/aws-ec2=1.68.0,@aws-cdk/aws-events=1.68.0,@aws-cdk/aws-iam=1.68.0,@aws-cdk/aws-kms=1.68.0,@aws-cdk/aws-lambda=1.68.0,@aws-cdk/aws-logs=1.68.0,@aws-cdk/aws-s3=1.68.0,@aws-cdk/aws-s3-assets=1.68.0,@aws-cdk/aws-sqs=1.68.0,@aws-cdk/aws-ssm=1.68.0,@aws-cdk/cloud-assembly-schema=1.68.0,@aws-cdk/core=1.68.0,@aws-cdk/cx-api=1.68.0,@aws-cdk/region-info=1.68.0,jsii-runtime=node.js/v12.15.0
     Metadata:
       aws:cdk:path: SystemOfRecordStack/CDKMetadata/Default
     Condition: CDKMetadataAvailable
+Parameters:
+  AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdS3BucketE8964A6D:
+    Type: String
+    Description: S3 bucket for asset "697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffd"
+  AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdS3VersionKey4F2D6DAB:
+    Type: String
+    Description: S3 key for asset version "697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffd"
+  AssetParameters697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffdArtifactHash24624DA2:
+    Type: String
+    Description: Artifact hash for asset "697ffd28848155ae33f94e08c622a01779100722d82c2681c6260453aabaaffd"
+Outputs:
+  Endpoint8024A810:
+    Value:
+      Fn::Join:
+        - ""
+        - - https://
+          - Ref: EndpointEEF1FD8F
+          - .execute-api.
+          - Ref: AWS::Region
+          - "."
+          - Ref: AWS::URLSuffix
+          - /
+          - Ref: EndpointDeploymentStageprodB78BEEA0
+          - /
 Conditions:
   CDKMetadataAvailable:
     Fn::Or:

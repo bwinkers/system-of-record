@@ -172,6 +172,27 @@ cdk deploy
 - Can I test the Lambda directly?
 - Can I see logs of my activity?
 
+## Local Testing
+
+### Create a local template
+
+```bash
+cdk synth --no-staging > template.yaml
+```
+
+### Run the API Gateway
+
+```bash
+sam local start-api
+```
+
+
+### Invoke the Lambda directly
+
+```bash
+sam local invoke Lambda12345678
+```
+
 ## Add QLDB Support
 
 ### Require modules
